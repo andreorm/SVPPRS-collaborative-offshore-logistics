@@ -1,0 +1,210 @@
+The current logistics system consists of 8 offshore installations which must be served. 
+Cargo demands are only requested on certain days within the planning period of 8 days. 
+There is a total of 5 vessels in the fleet, and a set of 108 voyages have been pregenerated. 
+
+Installations: {1,2,3,4,5,6,7,8}
+PlanningPeriod: {1,2,3,4,5,6,7,8,9}
+Vessels: {1,2,3,4,5}
+Bases: {1}
+Voyages: {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108}
+Durations: {1,2,3}
+Route Emissions: [37.7,33.6,72.3,59.4,68.9,30.7,63.3,51.6,59.6,68.6,58,56.5,42.9,67.1,52.2,47.7,43.6,40.8,37.7,44.4,33.6,49.5,46.9,50.7,46.6,81.7,68.9,30.7,47.6,44.9,47.7,43.6,40.8,72.3,59.6,49.1,47.3,37.9,47.8,47.3,45.3,35.3,37.7,44.4,33.6,80.7,79,79.9,67.1,44.6,42.9,50.7,46.6,30.7,68,66.2,67.1,52.2,43.4,41.6,47.7,43.6,40.8,44.5,43.5,82.6,81.7,81.7,68.9,33.2,43.2,42.3,42.1,81.4,80.4,80.5,67.7,31.5,37.7,44.4,33.6,43.5,42.6,50.7,46.6,82.6,81.6,81.7,68.9,30.7,42.8,41.9,47.7,43.6,40.8,73.2,72.3,72.3,59.6,68,32.8,67,31.8,37.7,33.6,67.1,30.7,52.2]
+Vessel start (end) bases: [1,1,1,1,1]
+Demands (day-installation pair): [0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,1,0,1,1,1,1,0,0,0,1,0,1,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0]
+A total of 17 installation-day demand nodes exists in this problem. 
+
+There are 540 binary voyage variables in total created for this particular problem.
+There are 108 binary spot vessel sailing variables in total created for this particular problem.
+There are 45 binary vessel waiting variables in total created for this particular problem.
+
+
+---------------------------------------------------------------------------------------------------------
+------------------------------OUTPUT FROM THE SOLUTION PROCESS-------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+
+ 
+Reading Problem \xprs_823e820
+Problem Statistics
+         187 (      0 spare) rows
+         788 (      0 spare) structural columns
+        5452 (      0 spare) non-zero elements
+Global Statistics
+         698 entities        0 sets        0 set members
+FICO Xpress v8.5.0-finalbin, solve started 17:29:03, Mar 17, 2024
+Minimizing MILP \xprs_823e820
+Original problem has:
+       187 rows          788 cols         5452 elements       698 globals
+Presolved problem has:
+        72 rows          658 cols         2950 elements       658 globals
+Will try to keep branch and bound tree memory usage below 9.3GB
+ *** Heuristic solution found:   913.900000      Time: 0 ***
+ *** Heuristic solution found:   843.800000      Time: 0 ***
+ *** Heuristic solution found:   667.900000      Time: 0 ***
+Starting concurrent solve with dual
+
+ Concurrent-Solve,   0s
+            Dual        
+    objective   sum inf 
+ P  533.10000   .0000000
+------- optimal --------
+Concurrent statistics:
+      Dual: 95 simplex iterations, 0.00s
+Optimal solution found
+ 
+   Its         Obj Value      S   Ninf  Nneg        Sum Inf  Time
+    95        533.100000      P      0     0        .000000     0
+Dual solved problem
+  95 simplex iterations in 0s
+
+Final objective                         : 5.330999999999999e+02
+  Max primal violation      (abs / rel) : 1.110e-16 / 1.110e-16
+  Max dual violation        (abs / rel) : 7.105e-15 / 7.105e-15
+  Max complementarity viol. (abs / rel) :       0.0 /       0.0
+All values within tolerances
+
+Starting root cutting & heuristics
+ 
+ Its Type    BestSoln    BestBound   Sols    Add    Del     Gap     GInf   Time
+k          555.900000   533.100000      4                  4.10%       0      0
+b          533.100000   533.100000      5                 -0.00%       0      0
+ *** Search completed ***     Time:     0 Nodes:          1
+Number of integer feasible solutions found is 5
+Best integer solution found is   533.100000
+Best bound is   533.100000
+Uncrunching matrix
+
+
+---------------------------------------------------------------------------------------------------------
+-------------------------------POSTPROCESSING OF DATA----------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+
+
+The optimal solution based on the given input data, as well as detailed
+information about the cargo flows, is presented below: 
+--- (Total emissions with REDUCED WAITING are found to be: 533.1 tons of CO2.)---
+
+---------------------------------------------------------------------------------------------------------
+------------------------------ROUTE AND VESSEL INFORMATION -------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+
+------- THE USE OF VESSEL 1 ------- 
+On day 1, the vessel starts sailing route 1 from base 1 at 4pm.
+	The route visits installation(s) 28 at day 2, 29 at day 2, 
+	before returning to base 1 at the start of day 3 (before 8am).
+On day 3, the vessel waits at base 1.
+
+On day 4, the vessel starts sailing route 45 from base 1 at 4pm.
+	The route visits installation(s) 28 at day 5, 
+	before returning to base 1 at the start of day 6 (before 8am).
+On day 6, the vessel waits at base 1.
+
+On day 7, the vessel waits at base 1.
+
+On day 8, the vessel waits at base 1.
+
+On day 9, the vessel waits at base 1.
+
+
+------- THE USE OF VESSEL 2 ------- 
+On day 1, the vessel waits at base 1.
+
+On day 2, the vessel waits at base 1.
+
+On day 3, the vessel waits at base 1.
+
+On day 4, the vessel starts sailing route 36 from base 1 at 4pm.
+	The route visits installation(s) 25 at day 5, 29 at day 5, 27 at day 5, 29 at day 6, 
+	before returning to base 1 at the start of day 7 (before 8am).
+On day 7, the vessel waits at base 1.
+
+On day 8, the vessel waits at base 1.
+
+On day 9, the vessel waits at base 1.
+
+
+------- THE USE OF VESSEL 3 ------- 
+On day 1, the vessel waits at base 1.
+
+On day 2, the vessel waits at base 1.
+
+On day 3, the vessel starts sailing route 19 from base 1 at 4pm.
+	The route visits installation(s) 28 at day 4, 29 at day 4, 
+	before returning to base 1 at the start of day 5 (before 8am).
+On day 5, the vessel waits at base 1.
+
+On day 6, the vessel starts sailing route 100 from base 1 at 4pm.
+	The route visits installation(s) 26 at day 7, 29 at day 7, 31 at day 7, 
+	before returning to base 1 at the start of day 9 (before 8am).
+On day 9, the vessel waits at base 1.
+
+
+------- THE USE OF VESSEL 4 ------- 
+On day 1, the vessel waits at base 1.
+
+On day 2, the vessel waits at base 1.
+
+On day 3, the vessel waits at base 1.
+
+On day 4, the vessel starts sailing route 58 from base 1 at 4pm.
+	The route visits installation(s) 31 at day 5, 
+	before returning to base 1 at the start of day 6 (before 8am).
+On day 6, the vessel starts sailing route 105 from base 1 at 4pm.
+	The route visits installation(s) 28 at day 7, 
+	before returning to base 1 at the start of day 8 (before 8am).
+On day 8, the vessel waits at base 1.
+
+On day 9, the vessel waits at base 1.
+
+
+------- THE USE OF VESSEL 5 ------- 
+On day 1, the vessel waits at base 1.
+
+On day 2, the vessel starts sailing route 11 from base 1 at 4pm.
+	The route visits installation(s) 30 at day 3, 31 at day 3, 
+	before returning to base 1 at the start of day 5 (before 8am).
+On day 5, the vessel starts sailing route 81 from base 1 at 4pm.
+	The route visits installation(s) 28 at day 6, 
+	before returning to base 1 at the start of day 7 (before 8am).
+On day 7, the vessel waits at base 1.
+
+On day 8, the vessel waits at base 1.
+
+On day 9, the vessel waits at base 1.
+
+
+------- THE USE OF SPOT VESSELS ------- 
+
+
+------- THE UTILIZATION OF FLEXIBILITY ------- 
+A total of 9 voyages are sailed.
+The solution produced selects routes that in total makes 0 shifts of delivery date
+In other words, there are no use of flexibility in the obtained solution (might not be allowed)
+
+
+
+------- THE FLEET BALANCE BETWEEN BASES ------- 
+Vessel 1 gets available at day 1 at base 1,
+and ends its (local) planning horizon at day 10 in base 1 after waiting since day 9.
+Vessel 2 gets available at day 1 at base 1,
+and ends its (local) planning horizon at day 10 in base 1 after waiting since day 9.
+Vessel 3 gets available at day 1 at base 1,
+and ends its (local) planning horizon at day 10 in base 1 after waiting since day 9.
+Vessel 4 gets available at day 1 at base 1,
+and ends its (local) planning horizon at day 10 in base 1 after waiting since day 9.
+Vessel 5 gets available at day 1 at base 1,
+and ends its (local) planning horizon at day 10 in base 1 after waiting since day 9.
+
+Furthermore, there is a need for 0 spot vessel(s) in total.
+
+From a fleet of 5 vessel(s), there are 5 vessel(s) in use in the optimal solution
+A total of 9 voyages are sailed.
+Waiting in port (20% of idling emissions) yields in total 129.6 tons of CO2.
+
+
+The 9 FLEET vessel voyages contribute with 403.5 tons of CO2.
+
+
+Hence, the TOTAL EMISSIONS ARE: 533.1 tons of CO2.

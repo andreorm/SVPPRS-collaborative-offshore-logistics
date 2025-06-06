@@ -1,0 +1,136 @@
+The current logistics system consists of 2 offshore installations which must be served. 
+Cargo demands are only requested on certain days within the planning period of 8 days. 
+There is a total of 1 vessels in the fleet, and a set of 10 voyages have been pregenerated. 
+
+Installations: {1,2}
+PlanningPeriod: {1,2,3,4,5,6,7,8,9}
+Vessels: {1}
+Bases: {1}
+Voyages: {1,2,3,4,5,6,7,8,9,10}
+Durations: {1,2}
+Route Emissions: [25.3,22.5,15.3,22.3,14,25.3,22.5,15.3,22.3,14]
+Vessel start (end) bases: [1]
+Demands (day-installation pair): [0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,0,1,0]
+A total of 4 installation-day demand nodes exists in this problem. 
+
+There are 10 binary voyage variables in total created for this particular problem.
+There are 10 binary spot vessel sailing variables in total created for this particular problem.
+There are 9 binary vessel waiting variables in total created for this particular problem.
+
+
+---------------------------------------------------------------------------------------------------------
+------------------------------OUTPUT FROM THE SOLUTION PROCESS-------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+
+ 
+Reading Problem \xprs_796fae0
+Problem Statistics
+          44 (      0 spare) rows
+          48 (      0 spare) structural columns
+         144 (      0 spare) non-zero elements
+Global Statistics
+          30 entities        0 sets        0 set members
+FICO Xpress v8.5.0-finalbin, solve started 17:40:27, Mar 17, 2024
+Minimizing MILP \xprs_796fae0
+Original problem has:
+        44 rows           48 cols          144 elements        30 globals
+Presolved problem has:
+        10 rows           25 cols           54 elements        25 globals
+LP relaxation tightened
+Symmetric problem: generators: 1, support set: 24
+ Number of orbits: 12, largest orbit: 2
+ Row orbits: 4, row support: 8
+Will try to keep branch and bound tree memory usage below 9.3GB
+ *** Heuristic solution found:   125.500000      Time: 0 ***
+Starting concurrent solve with dual
+
+ Concurrent-Solve,   0s
+            Dual        
+    objective   dual inf
+ D  77.600000   .0000000
+------- optimal --------
+Concurrent statistics:
+      Dual: 7 simplex iterations, 0.00s
+Optimal solution found
+ 
+   Its         Obj Value      S   Ninf  Nneg   Sum Dual Inf  Time
+     7         77.600000      D      0     0        .000000     0
+Dual solved problem
+  7 simplex iterations in 0s
+
+Final objective                         : 7.760000000000001e+01
+  Max primal violation      (abs / rel) :       0.0 /       0.0
+  Max dual violation        (abs / rel) :       0.0 /       0.0
+  Max complementarity viol. (abs / rel) :       0.0 /       0.0
+All values within tolerances
+
+Starting root cutting & heuristics
+ 
+ Its Type    BestSoln    BestBound   Sols    Add    Del     Gap     GInf   Time
+a           77.600000    77.600000      2                  0.00%       0      0
+ *** Search completed ***     Time:     0 Nodes:          1
+Number of integer feasible solutions found is 2
+Best integer solution found is    77.600000
+Best bound is    77.600000
+Uncrunching matrix
+
+
+---------------------------------------------------------------------------------------------------------
+-------------------------------POSTPROCESSING OF DATA----------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+
+
+The optimal solution based on the given input data, as well as detailed
+information about the cargo flows, is presented below: 
+--- (Total emissions with REDUCED WAITING are found to be: 77.6 tons of CO2.)---
+
+---------------------------------------------------------------------------------------------------------
+------------------------------ROUTE AND VESSEL INFORMATION -------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+
+------- THE USE OF VESSEL 1 ------- 
+On day 1, the vessel waits at base 1.
+
+On day 2, the vessel waits at base 1.
+
+On day 3, the vessel starts sailing route 1 from base 1 at 4pm.
+	The route visits installation(s) 33 at day 3, 34 at day 4, 
+	before returning to base 1 at the start of day 5 (before 8am).
+On day 5, the vessel waits at base 1.
+
+On day 6, the vessel waits at base 1.
+
+On day 7, the vessel starts sailing route 6 from base 1 at 4pm.
+	The route visits installation(s) 33 at day 7, 34 at day 8, 
+	before returning to base 1 at the start of day 9 (before 8am).
+On day 9, the vessel waits at base 1.
+
+
+------- THE USE OF SPOT VESSELS ------- 
+
+
+------- THE UTILIZATION OF FLEXIBILITY ------- 
+A total of 2 voyages are sailed.
+The solution produced selects routes that in total makes 0 shifts of delivery date
+In other words, there are no use of flexibility in the obtained solution (might not be allowed)
+
+
+
+------- THE FLEET BALANCE BETWEEN BASES ------- 
+Vessel 1 gets available at day 1 at base 1,
+and ends its (local) planning horizon at day 10 in base 1 after waiting since day 9.
+
+Furthermore, there is a need for 0 spot vessel(s) in total.
+
+From a fleet of 1 vessel(s), there are 1 vessel(s) in use in the optimal solution
+A total of 2 voyages are sailed.
+Waiting in port (20% of idling emissions) yields in total 27 tons of CO2.
+
+
+The 2 FLEET vessel voyages contribute with 50.6 tons of CO2.
+
+
+Hence, the TOTAL EMISSIONS ARE: 77.6 tons of CO2.

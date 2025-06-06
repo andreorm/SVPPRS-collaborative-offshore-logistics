@@ -1,0 +1,232 @@
+The current logistics system consists of 12 offshore installations which must be served. 
+Cargo demands are only requested on certain days within the planning period of 8 days. 
+There is a total of 5 vessels in the fleet, and a set of 569 voyages have been pregenerated. 
+
+Installations: {1,2,3,4,5,6,7,8,9,10,11,12}
+PlanningPeriod: {1,2,3,4,5,6,7,8,9}
+Vessels: {1,2,3,4,5}
+Bases: {1}
+Voyages: {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,256,257,258,259,260,261,262,263,264,265,266,267,268,269,270,271,272,273,274,275,276,277,278,279,280,281,282,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,298,299,300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,322,323,324,325,326,327,328,329,330,331,332,333,334,335,336,337,338,339,340,341,342,343,344,345,346,347,348,349,350,351,352,353,354,355,356,357,358,359,360,361,362,363,364,365,366,367,368,369,370,371,372,373,374,375,376,377,378,379,380,381,382,383,384,385,386,387,388,389,390,391,392,393,394,395,396,397,398,399,400,401,402,403,404,405,406,407,408,409,410,411,412,413,414,415,416,417,418,419,420,421,422,423,424,425,426,427,428,429,430,431,432,433,434,435,436,437,438,439,440,441,442,443,444,445,446,447,448,449,450,451,452,453,454,455,456,457,458,459,460,461,462,463,464,465,466,467,468,469,470,471,472,473,474,475,476,477,478,479,480,481,482,483,484,485,486,487,488,489,490,491,492,493,494,495,496,497,498,499,500,501,502,503,504,505,506,507,508,509,510,511,512,513,514,515,516,517,518,519,520,521,522,523,524,525,526,527,528,529,530,531,532,533,534,535,536,537,538,539,540,541,542,543,544,545,546,547,548,549,550,551,552,553,554,555,556,557,558,559,560,561,562,563,564,565,566,567,568,569}
+Durations: {1,2,3}
+Route Emissions: [41,42.2,58.4,46.3,49.2,32.8,52.8,42.2,48.7,58.1,46,49.2,32.5,47.6,52.7,42,47.3,56.7,44.6,48.5,30.4,47.6,49.8,52.7,42,57.9,47.3,56.7,44.6,48.5,30.1,41.9,38.7,40.5,46.9,47,38,45.3,59.3,47.9,52.7,42.1,51.3,52.6,41.9,58.2,46,49,31.7,55.7,45.1,59.3,47.6,52.4,41.8,50.4,50.4,39.8,58.1,46,46.8,28.5,48.6,54.3,43.6,57.6,46.2,51,40.4,60.2,49.6,52.4,41.7,56.5,44.3,48.4,29,49,53.3,43.6,55.8,45.8,50,40.4,58.4,48.3,47.8,38.4,54.6,43,46.3,39.1,43.9,47.9,42.8,33.3,46.4,53,51.1,45,35.9,40.7,49.4,47.5,41.4,30.1,49.1,46.3,38.4,38.4,47.2,44.3,39.2,27.8,45.3,53,51.1,45,33.1,50.2,60.1,53.6,56.8,54.9,48.8,51.8,46.7,61.6,59.7,53.6,50.9,47.1,45.7,36.9,46.5,42.8,39,47.4,52.9,47.1,49.8,45.1,52.5,46.4,51.3,36.6,49.6,53.5,47.4,52.8,47.1,48.7,44,52.5,46.4,51.2,32.8,45.6,45.1,48.3,42.1,47.6,41.8,50.7,44.5,50.4,39.8,47.2,41,46,28.5,44,49,43.6,46.1,40.7,45.8,40.4,48.6,42.9,48.3,38.4,45,39.3,43,51.3,42.8,49,33.6,39.1,52.7,44.1,51.3,42.8,51.8,41.4,46,49,33.3,58.8,48.4,53.8,45.3,51.6,36.2,50.7,46.3,53.7,49.4,52.9,57.9,49.3,55,44.6,57.5,49,49.9,41.4,57,46.6,56.1,44.6,47.8,30.4,49.9,54.8,46.2,53.5,45,49.7,53.9,43.5,51.3,35.9,50.6,46.3,53.7,49.4,55,50.6,57.8,49.3,51.2,42.6,57.5,49,49.9,41.4,52.5,48.2,56.9,46.1,50.3,39.9,53.2,56.1,44.6,47.7,30.1,46.3,52.5,38.7,52.3,48,56,45.6,50.4,51,42.5,48,57.6,46,48.7,32.5,48.9,54.9,46.3,56.6,46.2,52.5,38.4,50.1,45.8,47.2,48.5,52.3,42.4,59,48.2,47.7,39.2,53.7,49.3,58.4,47.2,51.4,41.1,57.6,46,45.4,27.8,54.5,50.2,53,54.3,58.6,48.2,65.6,54,53.5,45,51.5,35.1,50.6,46.3,53.5,49.1,56.9,52.6,57.6,49,54.7,44.3,56.7,57.3,48.7,49.6,41.1,57.3,53,58.9,54.6,56.7,46.3,55.9,44.3,47.6,29,53.5,49.2,57.3,53,54,62.4,53.8,54.5,46,65.6,54,53.5,45,55.9,51.5,61,49.4,53.6,43.2,51.1,33.1,55.4,49.3,55.1,46.1,53,46.8,51.4,53.6,59.4,50.4,57.3,51.1,55.7,49.9,45.6,55.9,47.8,49.8,42.1,55.6,47.5,46.6,39,55,45,48.9,39.3,54.2,43,45,45.9,47.1,51.1,39.7,45.6,46.8,44.8,51.1,36.5,43.4,45.6,46.9,49.6,37.2,49.5,41.8,50.2,44.1,53.2,49.9,54.1,40.9,47.8,48.7,50,52.6,41.6,53.8,46.1,48.1,47.7,51.7,40.4,50.9,45.1,44.7,48.6,36.1,46.4,46.9,45.8,46.1,37.9,40.2,45.3,47.9,42.1,51.4,41.9,46,31.7,49.9,46.1,46.9,45.8,46,37.6,37.1,45.1,47.6,41.8,50.4,39.8,46,28.5,45.5,47.2,44.3,45.6,44.4,35.1,39.3,43.6,46.2,40.4,49.7,41.7,44.3,29,44.7,47.2,45.9,44,45.6,43.1,33.1,53,52.2,51.5,54,48.2,49.4,52.2,53,54.1,52.1,51.2,53.8,47.9,56.6,45.9,52.1,52.6,53.9,51.8,51.1,53.7,47.9,57.1,49.2,51.8,54.3,52.3,53.9,51.4,50.7,53.3,47.4,55.9,45.2,51.4,35.5,49.1,43.6,45.8,40.4,48.4,38.4,43,39.2,52.4,42.8,46,50,33.3,54.6,45,44.7,52.2,35.9,58.6,49,50.9,41.4,56.7,44.6,48.5,30.1,46.4,53.7,38.4,48.2,48.8,39.2,58.2,46,46.5,27.8,57.1,47.5,54.6,45,55.3,43.1,51.8,33.1,56.5,47.5,47.4,39,54.6,43,46.3,47.1,37.6,38.1,28.5,45.3,33.1,36.9]
+Vessel start (end) bases: [1,1,1,1,1]
+Demands (day-installation pair): [0,1,1,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,1,0,1,0,1,0,0,1,0,0,1,1,0,0,0,0,0,1,0,1,1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0]
+A total of 25 installation-day demand nodes exists in this problem. 
+
+There are 2845 binary voyage variables in total created for this particular problem.
+There are 569 binary spot vessel sailing variables in total created for this particular problem.
+There are 45 binary vessel waiting variables in total created for this particular problem.
+
+
+---------------------------------------------------------------------------------------------------------
+------------------------------OUTPUT FROM THE SOLUTION PROCESS-------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+
+ 
+Reading Problem \xprs_2d820500
+Problem Statistics
+         195 (      0 spare) rows
+        3554 (      0 spare) structural columns
+       30820 (      0 spare) non-zero elements
+Global Statistics
+        3464 entities        0 sets        0 set members
+FICO Xpress v8.5.0-finalbin, solve started 13:58:11, Mar 15, 2024
+Minimizing MILP \xprs_2d820500
+Original problem has:
+       195 rows         3554 cols        30820 elements      3464 globals
+Presolved problem has:
+        86 rows         3274 cols        16283 elements      3274 globals
+Will try to keep branch and bound tree memory usage below 8.0GB
+ *** Heuristic solution found:   626.500000      Time: 0 ***
+Starting concurrent solve with dual, primal and barrier (6 threads)
+
+                           Concurrent-Solve,   0s
+            Dual                      Primal                     Barrier      
+    objective   sum inf                                                       
+ P  467.69444   .0000000 |                          |                         
+------- optimal -------- | ----- interrupted ------ | ----- interrupted ------
+Concurrent statistics:
+      Dual: 365 simplex iterations, 0.02s
+    Primal: 441 simplex iterations, 0.01s
+   Barrier: 18 barrier and 0 simplex iterations, 0.02s
+            Barrier used 6 threads 4 cores, L1\L2 cache: 32K\8192K
+            Barrier used AVX support
+Optimal solution found
+ 
+   Its         Obj Value      S   Ninf  Nneg        Sum Inf  Time
+   365        467.694444      P      0     0        .000000     0
+Dual solved problem
+  365 simplex iterations in 0s
+
+Final objective                         : 4.676944444444445e+02
+  Max primal violation      (abs / rel) : 5.551e-17 / 5.551e-17
+  Max dual violation        (abs / rel) : 3.553e-15 / 3.553e-15
+  Max complementarity viol. (abs / rel) :       0.0 /       0.0
+All values within tolerances
+
+Starting root cutting & heuristics
+ 
+ Its Type    BestSoln    BestBound   Sols    Add    Del     Gap     GInf   Time
+k          508.100000   467.694444      2                  7.95%       0      0
+   1  K    508.100000   468.227397      2      7      0    7.85%      43      0
+   2  K    508.100000   469.150000      2     57      5    7.67%      44      0
+   3  K    508.100000   470.450000      2     14     40    7.41%      57      0
+   4  K    508.100000   471.250000      2     13     13    7.25%      58      0
+   5  K    508.100000   471.524000      2      8     16    7.20%      28      0
+   6  K    508.100000   472.640000      2     20      7    6.98%      60      0
+   7  K    508.100000   472.817778      2      8     21    6.94%      55      0
+   8  K    508.100000   472.875000      2     13      7    6.93%      69      0
+   9  K    508.100000   473.440000      2     22      9    6.82%      68      0
+  10  K    508.100000   473.640000      2     14     22    6.78%      55      0
+  11  K    508.100000   473.750000      2      8      9    6.76%      64      0
+  12  K    508.100000   473.890909      2      7      6    6.73%      71      0
+  13  K    508.100000   474.075000      2     11     11    6.70%      63      0
+  14  K    508.100000   474.085714      2      7      9    6.69%      64      0
+  15  K    508.100000   474.170000      2     12      5    6.68%      73      0
+  16  K    508.100000   474.235385      2     11     15    6.66%      61      0
+  17  K    508.100000   474.300000      2     19     10    6.65%      75      0
+  18  K    508.100000   474.437838      2      5     19    6.63%      72      0
+  19  K    508.100000   474.489286      2      8      3    6.61%      74      0
+  20  K    508.100000   474.540000      2     16     17    6.60%      65      0
+  21  G    508.100000   474.557971      2      4      0    6.60%      55      0
+  22  G    508.100000   474.600000      2      3      5    6.59%      80      0
+  23  G    508.100000   474.600000      2      5      8    6.59%      38      0
+Heuristic search started
+R          474.600000   474.600000      3                 -0.00%       0      0
+STOPPING - MIPRELSTOP target reached (MIPRELSTOP=0.001  gap=-8.38399e-016).
+Heuristic search stopped
+ *** Search completed ***     Time:     0 Nodes:          1
+Number of integer feasible solutions found is 3
+Best integer solution found is   474.600000
+Best bound is   474.600000
+Uncrunching matrix
+
+
+---------------------------------------------------------------------------------------------------------
+-------------------------------POSTPROCESSING OF DATA----------------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+
+
+The optimal solution based on the given input data, as well as detailed
+information about the cargo flows, is presented below: 
+--- (Total emissions with REDUCED WAITING are found to be: 474.6 tons of CO2.)---
+
+---------------------------------------------------------------------------------------------------------
+------------------------------ROUTE AND VESSEL INFORMATION -------------------------------------------
+---------------------------------------------------------------------------------------------------------
+
+
+------- THE USE OF VESSEL 1 ------- 
+On day 1, the vessel starts sailing route 2 from base 1 at 4pm.
+	The route visits installation(s) 13 at day 2, 19 at day 2, 20 at day 2, 15 at day 2, 
+	before returning to base 1 at the start of day 4 (before 8am).
+On day 4, the vessel starts sailing route 227 from base 1 at 4pm.
+	The route visits installation(s) 13 at day 5, 21 at day 5, 19 at day 6, 20 at day 5, 
+	before returning to base 1 at the start of day 7 (before 8am).
+On day 7, the vessel waits at base 1.
+
+On day 8, the vessel waits at base 1.
+
+On day 9, the vessel waits at base 1.
+
+
+------- THE USE OF VESSEL 2 ------- 
+On day 1, the vessel starts sailing route 36 from base 1 at 4pm.
+	The route visits installation(s) 16 at day 2, 23 at day 2, 
+	before returning to base 1 at the start of day 4 (before 8am).
+On day 4, the vessel waits at base 1.
+
+On day 5, the vessel starts sailing route 470 from base 1 at 4pm.
+	The route visits installation(s) 21 at day 6, 13 at day 6, 15 at day 7, 
+	before returning to base 1 at the start of day 8 (before 8am).
+On day 8, the vessel waits at base 1.
+
+On day 9, the vessel waits at base 1.
+
+
+------- THE USE OF VESSEL 3 ------- 
+On day 1, the vessel waits at base 1.
+
+On day 2, the vessel starts sailing route 98 from base 1 at 4pm.
+	The route visits installation(s) 13 at day 3, 21 at day 3, 14 at day 4, 19 at day 3, 
+	before returning to base 1 at the start of day 5 (before 8am).
+On day 5, the vessel waits at base 1.
+
+On day 6, the vessel starts sailing route 548 from base 1 at 4pm.
+	The route visits installation(s) 18 at day 7, 19 at day 8, 21 at day 7, 23 at day 8, 
+	before returning to base 1 at the start of day 9 (before 8am).
+On day 9, the vessel waits at base 1.
+
+
+------- THE USE OF VESSEL 4 ------- 
+On day 1, the vessel waits at base 1.
+
+On day 2, the vessel waits at base 1.
+
+On day 3, the vessel waits at base 1.
+
+On day 4, the vessel starts sailing route 263 from base 1 at 4pm.
+	The route visits installation(s) 15 at day 5, 20 at day 5, 17 at day 5, 22 at day 6, 
+	before returning to base 1 at the start of day 7 (before 8am).
+On day 7, the vessel waits at base 1.
+
+On day 8, the vessel waits at base 1.
+
+On day 9, the vessel waits at base 1.
+
+
+------- THE USE OF VESSEL 5 ------- 
+On day 1, the vessel waits at base 1.
+
+On day 2, the vessel waits at base 1.
+
+On day 3, the vessel waits at base 1.
+
+On day 4, the vessel waits at base 1.
+
+On day 5, the vessel waits at base 1.
+
+On day 6, the vessel waits at base 1.
+
+On day 7, the vessel waits at base 1.
+
+On day 8, the vessel waits at base 1.
+
+On day 9, the vessel waits at base 1.
+
+
+------- THE USE OF SPOT VESSELS ------- 
+
+
+------- THE UTILIZATION OF FLEXIBILITY ------- 
+A total of 7 voyages are sailed.
+The solution produced selects routes that in total makes 0 shifts of delivery date
+In other words, there are no use of flexibility in the obtained solution (might not be allowed)
+
+
+
+------- THE FLEET BALANCE BETWEEN BASES ------- 
+Vessel 1 gets available at day 1 at base 1,
+and ends its (local) planning horizon at day 10 in base 1 after waiting since day 9.
+Vessel 2 gets available at day 1 at base 1,
+and ends its (local) planning horizon at day 10 in base 1 after waiting since day 9.
+Vessel 3 gets available at day 1 at base 1,
+and ends its (local) planning horizon at day 10 in base 1 after waiting since day 9.
+Vessel 4 gets available at day 1 at base 1,
+and ends its (local) planning horizon at day 10 in base 1 after waiting since day 9.
+Vessel 5 gets available at day 1 at base 1,
+and ends its (local) planning horizon at day 10 in base 1 after waiting since day 9.
+
+Furthermore, there is a need for 0 spot vessel(s) in total.
+
+From a fleet of 5 vessel(s), there are 4 vessel(s) in use in the optimal solution
+A total of 7 voyages are sailed.
+Waiting in port (20% of idling emissions) yields in total 129.6 tons of CO2.
+
+
+The 7 FLEET vessel voyages contribute with 345 tons of CO2.
+
+
+Hence, the TOTAL EMISSIONS ARE: 474.6 tons of CO2.
