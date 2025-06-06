@@ -1,0 +1,681 @@
+! ------------------- READ INSTRUCTIONS BEFORE SOLVING!! -------------------------
+
+
+! This model is used for solving the supply vessel planning problem with resource sharing
+! (SVPPRS) used for evaluating the emission reduction potential from increased levels of 
+! collaboration among operators in offshore logistics sharing a combined fleet of supply vessels.
+
+! Author: Andreas Breivik Ormevik
+! Developed 2023-2025
+
+! Requires the following input files - READ CORRESPONDING README-FILES BEFORE SOLVING!
+
+	! 1) The ROUTE INPUT file containing all the relevant information about #installations, #bases, demands and generated routes used to create weekly schedules
+	! 2) The fleet size file controlling settings for the available fleet: Number of vessels, and the day of the planning horizon in which the vessels become available, and from which base
+	! 3) Solver settings file, containing details on solver settings (acceptable optimization gap, max solution time) and also parameters related to 
+
+! NOTE THE FOLLOWING: The route input files and this model are both developed to handle
+! flexibility in delivery days (+/- 1 day after/before the initially requested day), 
+! but for the computational study presented in the paper, only static delivery days are considered.
+
+
+
+
+! ------------------- START OF MODEL --------------------
+
+
+
+
+model SVPPRS_ ! The model is given a name
+ 
+! Compiler directives ! ----------------------------------------------------------------------------------------- 
+options explterm ! This option means that all lines must end with a ; 
+options noimplicit ! This option means that everything must be declared before it is used 
+ 
+ 
+uses "mmxprs", "mmsheet"; 
+! mmxprs is the library including the optimizer  
+! mmsheet allows for retrieving data from Excel sheets (but NOT used in this model formulation)
+
+
+
+! -------------------------------------- START OF MODEL ---------------------------------------------------------
+
+
+! --------------------------------------------------------------------------------------------------------------- 
+! ----------------------------------PREPROCESSING OF INPUT DATA--------------------------------------------------
+! ---------------------------------------------------------------------------------------------------------------
+
+
+ 
+ 
+! Parameters ! --------------------------------------------------------------------------------------------------
+
+!Read the input files
+parameters  
+	CaseInput				= 'Case2_Base2_ROUTEINPUT.txt';
+	FleetSize				= 'FleetSize_Case2_B2.txt';
+
+	!CaseInput 				= 'Case4_Full_W12_ROUTEINPUT.txt';
+	!FleetSize				= 'FleetSize_Case4_Full.txt';
+
+	ParamTuning				= '_SolverSettings_June25.txt';
+	
+end-parameters 
+
+
+
+! Parameters are scalars (integer, real, boolean, string). 
+! Parameters can be changed during run time. 
+ 
+! Body ! --------------------------------------------------------------------------------------------------------
+ 
+ 
+ ! Data describing the size of the problem
+declarations
+	nInsts:				integer;
+	nDays:				integer;
+	nRoutes:			integer;
+	RouteMaxDur:		integer;
+	nBases:				integer;
+	nVessels:			integer;
+	
+	
+	TruckDistCalc:			integer;
+	
+
+end-declarations
+
+
+
+initializations from CaseInput
+	nInsts;
+	nDays;			
+	nRoutes;
+	RouteMaxDur;
+	nBases;	
+
+	TruckDistCalc;
+end-initializations 
+
+
+initializations from FleetSize
+	nVessels;
+	
+end-initializations
+
+
+declarations
+	Installations:			set of integer;
+	PlanningPeriod:			set of integer;
+	Vessels:				set of integer;
+	Bases:					set of integer;
+	Voyages:				set of integer;
+	Durations:				set of integer;
+	
+end-declarations
+
+Installations	:=	1 .. nInsts;	
+PlanningPeriod	:=	1 .. nDays + 1;			! Be aware of the size! Are demands specified on day 0 or day 1? And what about the final day? Keep time for returning to base.
+Vessels		 	:= 1 .. nVessels;
+Bases			:= 1 .. nBases;
+Voyages			:= 1 .. nRoutes;
+Durations		:= 1 .. RouteMaxDur;
+
+
+finalize(Installations);
+finalize(PlanningPeriod);
+finalize(Vessels);
+finalize(Bases);
+finalize(Voyages);
+finalize(Durations);
+
+
+! All sets are finalized. This means that it is no longer possible to add or
+! remove elements from the sets
+
+
+! DEFINING PARAMETERS
+declarations
+	BigM = 6;	!Can never sail more than 6 routes in a week
+	TMax = 7;	!Number of days in a week...
+	
+	
+	InstTranslation: 	array(Installations) of integer;
+	
+	DemandReq: 	array(Installations, PlanningPeriod) of integer;
+	
+	
+	WaitingEmissions	: real;
+	
+	SpotAddedEmissions	:		real;
+	TruckFactorInterBase:	real;
+	TruckFactorIntraMong:	real;
+	TruckUnitEmissions: 	real;
+	
+	VesselStartBases:	array(Vessels) of integer;
+	
+	CargoOnRoute:	array(Voyages) of integer;
+
+	SpotAllowed:	array(Voyages) of integer;
+	VesselStartDays:	array(Vessels) of integer;
+	VesselEndDays: 	array(Vessels) of integer;
+
+	DayAtPos:	array(Installations, Voyages) of integer;
+	RouteBaseStart: array(Voyages) of integer;
+	RouteBaseEnd:	array(Voyages) of integer;
+
+	RouteStartDays:	array(Voyages) of integer;
+	RouteEndDays:	array(Voyages) of integer;
+	RouteDurations:	array(Voyages) of integer;
+	RouteEmissions:	array(Voyages) of real;
+	MipGap:		real;
+	MaxTime:	real;
+	
+		
+end-declarations
+
+
+initializations from FleetSize
+	
+	
+VesselStartBases;	
+	
+VesselStartDays;
+VesselEndDays;
+
+end-initializations
+
+initializations from CaseInput
+
+
+InstTranslation;
+DemandReq;
+
+
+
+CargoOnRoute;
+
+SpotAllowed;
+
+DayAtPos;
+RouteBaseStart;
+RouteBaseEnd;
+
+RouteStartDays;
+RouteEndDays;
+RouteDurations;
+RouteEmissions;
+
+
+end-initializations
+
+
+initializations from ParamTuning
+	MipGap;
+	MaxTime;
+	
+	WaitingEmissions;
+	SpotAddedEmissions;
+	TruckFactorInterBase;
+	TruckFactorIntraMong;
+	TruckUnitEmissions;
+	
+end-initializations
+
+
+
+! -----------------------------------------------------------------------
+! ------------------- END OF PREPROCESSING STAGE ------------------------
+! -----------------------------------------------------------------------
+
+
+! THE INPUT DATA IS NOW PRINTED TO CONTROL THAT EVERYTHING IS CORRECT
+
+writeln('The current logistics system consists of ', nInsts, ' offshore installations which must be served. ');
+writeln('Cargo demands are only requested on certain days within the planning period of ', nDays, ' days. ');
+writeln('There is a total of ', nVessels, ' vessels in the fleet, and a set of ', nRoutes, ' voyages have been pregenerated. ');
+writeln;
+
+writeln('Installations: ', Installations);
+writeln('PlanningPeriod: ', PlanningPeriod);
+writeln('Vessels: ', Vessels);
+writeln('Bases: ', Bases);
+writeln('Voyages: ', Voyages);
+writeln('Durations: ', Durations);
+
+writeln('Route Emissions: ', RouteEmissions);
+writeln('Vessel start (end) bases: ', VesselStartBases);
+
+
+writeln('Demands (day-installation pair): ', DemandReq);
+
+
+
+! ---------------------------------------------------------------------------------------------------------------
+! ----------------------------------IMPLEMENTING THE PROBLEM FORMULATION-----------------------------------------
+! ---------------------------------------------------------------------------------------------------------------
+
+
+
+! CREATE DECISION VARIABLES
+declarations			
+	VoyageSailed:		dynamic array(Vessels, Voyages)	of mpvar;									
+	SpotSailings:		dynamic array(Voyages) of mpvar;
+	WaitVar:			dynamic array(Vessels, Bases, PlanningPeriod) of mpvar;
+
+		
+	VesselBinary: 		dynamic array(Vessels) of mpvar;	!Dummy for counting vessels
+
+	AlfaStartDay:	dynamic array(Vessels, PlanningPeriod) of mpvar;
+	BetaEndDay:		dynamic array(Vessels, PlanningPeriod) of mpvar;
+
+end-declarations
+
+
+forall (rr in Voyages | SpotAllowed(rr) = 1) do
+	create(SpotSailings(rr));
+end-do
+
+forall (vv in Vessels, rr in Voyages | RouteStartDays(rr) >= VesselStartDays(vv) and RouteEndDays(rr) <= VesselEndDays(vv)) do
+	create(VoyageSailed(vv,rr));
+end-do
+
+forall (vv in Vessels, bb in Bases, tt in PlanningPeriod | tt <= VesselEndDays(vv) - 1) do
+	create(WaitVar(vv, bb, tt));
+end-do
+
+
+forall (vv in Vessels) do
+	create(VesselBinary(vv));
+end-do
+
+
+forall (vv in Vessels, tt in PlanningPeriod | tt >= VesselStartDays(vv) and tt <= VesselEndDays(vv)) do
+	create(AlfaStartDay(vv,tt));
+	create(BetaEndDay(vv,tt));
+end-do
+
+
+writeln('A total of ', count(ii in Installations, tt in PlanningPeriod | DemandReq(ii,tt) > 0.01), ' installation-day demand nodes exists in this problem. ');
+writeln;
+write('There are ');
+write(count(vv in Vessels, rr in Voyages | exists(VoyageSailed(vv,rr))));
+writeln(' binary voyage variables in total created for this particular problem.');
+
+write('There are ');
+write(count(rr in Voyages | exists(SpotSailings(rr))));
+writeln(' binary spot vessel sailing variables in total created for this particular problem.');
+
+write('There are ');
+write(count(vv in Vessels, bb in Bases, tt in PlanningPeriod | exists(WaitVar(vv, bb, tt))));
+writeln(' binary vessel waiting variables in total created for this particular problem.');
+
+
+writeln;
+
+
+! All variables are declared in dynamic arrays. Unlike the data, all variables declared in dynamic arrays must be created.
+! All variables are by default >= 0
+
+
+declarations
+!minimize
+	TotalEmissions:				linctr;
+	
+!subject to	
+
+	DemandCon:	dynamic array(Installations, PlanningPeriod)	of linctr;
+
+	BaseCapCon:	dynamic array(Bases, PlanningPeriod)							of linctr;
+	FlowStart:	dynamic array(Vessels, Bases)									of linctr;
+	FlowCons:	dynamic array(Vessels, Bases, PlanningPeriod)					of linctr;
+	FlowEnd:	dynamic array(Vessels)											of linctr;
+	!FlowEndAlt: dynamic array(Vessels, Bases)									of linctr;
+
+	VesselSymmetry:		dynamic array(Vessels, Vessels)	of linctr;
+	
+	VesselHorizon:	dynamic array(Vessels, PlanningPeriod) of linctr;
+	AlfaBalance:	dynamic array(Vessels, PlanningPeriod) of linctr;
+	BetaBalance:	dynamic array(Vessels, PlanningPeriod) of linctr;
+	
+	SailBinary:	dynamic array(Vessels, Voyages)									of linctr;
+	SpotBinary:	dynamic array(Voyages)											of linctr;
+	WaitBinary:	dynamic array(Vessels, Bases, PlanningPeriod)					of linctr;
+
+	VesselUsage: dynamic array(Vessels)											of linctr;
+	VesselUsageSec:	dynamic array(Vessels)										of linctr;
+	UseBinary:	dynamic array(Vessels)											of linctr;
+	
+
+	
+end-declarations
+
+
+! ---------------------------------------------------- END OF PROBLEM SIZE COUNTING AND CONSTRAINT DECLARATIONS   ----------------------------------
+
+
+! --------------------------------------------------------------------------------------------------------------------------------------------------
+! ------------------------------- OBJECTIVE FUNCTION AND CONSTRAINTS - IMPLEMENTING THE MODEL FORMULATION --------------------------------------
+! --------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+! Objective function - calculate the total emissions from the total vessel activity (both fleet and spot vessels)
+TotalEmissions :=  
+sum(vv in Vessels, rr in Voyages) RouteEmissions(rr)*VoyageSailed(vv,rr) + sum(rr in Voyages) (RouteEmissions(rr)+SpotAddedEmissions)*SpotSailings(rr) + sum(vv in Vessels, bb in Bases, tt in PlanningPeriod | tt <= VesselEndDays(vv) - 1) WaitVar(vv,bb,tt)*WaitingEmissions + sum(vv in Vessels, rr in Voyages | SpotAllowed(rr) = 0) (1-SpotAllowed(rr))*TruckFactorInterBase*TruckUnitEmissions*CargoOnRoute(rr)*VoyageSailed(vv,rr) + sum(vv in Vessels, rr in Voyages | RouteBaseStart(rr) = 1)  TruckDistCalc*TruckFactorIntraMong*TruckUnitEmissions*CargoOnRoute(rr)*VoyageSailed(vv,rr);
+
+
+
+! Constraints - All (i,t)-nodes (installation at day) where an order is requested, must be serviced by either a fleet or a spot vessel
+
+ 
+forall(ii in Installations, tt in PlanningPeriod | DemandReq(ii,tt) > 0.1) do
+
+	DemandCon(ii,tt) :=
+							sum(vv in Vessels, rr in Voyages | DayAtPos(ii,rr) = tt) VoyageSailed(vv,rr) + sum(rr in Voyages | DayAtPos(ii,rr) = tt) SpotSailings(rr) 	>=	 1; 
+							
+end-do 
+
+
+! Constraints - Ensure that each vessel either takes on a route or stay in port during first day of the vessel's planning horizon
+forall (vv in Vessels, bb in Bases) do
+	if bb = VesselStartBases(vv) then
+		
+		FlowStart(vv, bb) :=
+			WaitVar(vv, bb, VesselStartDays(vv)) + sum(rr in Voyages | RouteStartDays(rr) = VesselStartDays(vv) and RouteBaseStart(rr) = bb) VoyageSailed(vv,rr) = 1;
+	
+	else 
+		FlowStart(vv, bb) :=
+			WaitVar(vv, bb, VesselStartDays(vv)) + sum(rr in Voyages | RouteStartDays(rr) = VesselStartDays(vv) and RouteBaseStart(rr) = bb) VoyageSailed(vv,rr) = 0;		
+	
+	end-if	
+end-do 
+
+! Constraints - flow conservation for all days except the first and final day of the planning horizon
+
+forall (vv in Vessels, bb in Bases, tt in PlanningPeriod | tt > VesselStartDays(vv) and tt < VesselEndDays(vv)) do
+
+	FlowCons(vv, bb, tt) :=
+			WaitVar(vv, bb, tt-1) + sum(rr in Voyages | RouteEndDays(rr) = tt and RouteBaseEnd(rr) = bb) VoyageSailed(vv,rr) = sum(rr in Voyages | RouteStartDays(rr) = tt and RouteBaseStart(rr) = bb) VoyageSailed(vv,rr) + WaitVar(vv, bb, tt);
+end-do
+
+
+! Constraints - Ensure that each vessel either takes on a route that ends on the final day of the vessel's planning horizon, and if not, it must select to wait the day before
+forall (vv in Vessels) do
+	FlowEnd(vv) :=
+			sum(bb in Bases) WaitVar(vv, bb, (VesselEndDays(vv)-1)) + sum(bb in Bases, rr in Voyages | RouteBaseEnd(rr) = bb and RouteEndDays(rr) = VesselEndDays(vv)) VoyageSailed(vv,rr) = 1;
+end-do 
+
+! Constraints - AN ALTERNATIVE FORMULATION for the final day of the planning horizon, requiring each vessel to return to the base at which it started its planning horizon
+
+!forall (vv in Vessels, bb in Bases) do
+!	if bb = VesselStartBases(vv) then
+!		FlowEndAlt(vv, bb) :=
+!			WaitVar(vv, bb, (VesselEndDays(vv)-1)) + sum(rr in Voyages | RouteBaseEnd(rr) = bb and RouteEndDays(rr) = VesselEndDays(vv)) VoyageSailed(vv,rr) = 1;
+!	else 
+!		FlowEndAlt(vv, bb) :=
+!			WaitVar(vv, bb, (VesselEndDays(vv)-1)) + sum(rr in Voyages | RouteBaseEnd(rr) = bb and RouteEndDays(rr) = VesselEndDays(vv)) VoyageSailed(vv,rr) = 0;
+!	end-if
+!end-do 
+
+
+
+! Constraints - SYMMETRY BREAKING
+
+forall (vv in Vessels) do
+	VesselUsage(vv) :=
+			sum(rr in Voyages) VoyageSailed(vv,rr) <= VesselBinary(vv)*BigM;
+end-do
+
+forall (vv in Vessels) do
+	VesselUsageSec(vv) :=
+			sum(rr in Voyages) VoyageSailed(vv,rr) >= VesselBinary(vv);
+end-do
+		
+			
+
+forall(vv in Vessels, vp in Vessels | vp > vv) do
+	VesselSymmetry(vv,vp)	:=
+			VesselBinary(vp) <= VesselBinary(vv);
+end-do
+
+
+!Constraints - Passive variables (Alfa and Beta) representing the two summations in (6) in the model formulation
+forall(vv in Vessels, tt in PlanningPeriod | tt >= VesselStartDays(vv) and tt <= VesselEndDays(vv)) do
+	AlfaBalance(vv,tt)	:=
+			AlfaStartDay(vv,tt) = sum(rr in Voyages | RouteStartDays(rr) = tt) VoyageSailed(vv,rr);
+end-do
+
+forall(vv in Vessels, tt in PlanningPeriod | tt >= VesselStartDays(vv) and tt <= VesselEndDays(vv)) do
+	BetaBalance(vv,tt)	:=
+			BetaEndDay(vv,tt) = sum(rr in Voyages | RouteEndDays(rr) = tt) VoyageSailed(vv,rr);
+end-do
+
+
+!Constraints - This is constraints (6) in the model formulation - limiting the time span for activity for each vessel
+forall(vv in Vessels, tt in PlanningPeriod, tp in PlanningPeriod | tp > tt + TMax) do
+	VesselHorizon(vv,tt)	:=
+			BetaEndDay(vv,tp) <= 1 - AlfaStartDay(vv,tt);
+end-do
+
+
+! ---- END OF CONDITIONAL CONSTRAINTS ----
+
+ 
+ 
+ ! Binary constraints related to the decision variables 
+  
+forall(vv in Vessels, rr in Voyages) do
+ 	SailBinary(vv, rr) :=
+ 					VoyageSailed(vv, rr) is_binary;
+end-do
+ 
+forall(rr in Voyages) do
+ 	SpotBinary(rr) :=
+ 					SpotSailings(rr) is_binary;
+end-do
+  
+forall(vv in Vessels, bb in Bases, tt in PlanningPeriod) do
+ 	WaitBinary(vv, bb, tt) :=
+ 					WaitVar(vv, bb, tt) is_binary;
+end-do
+
+
+forall(vv in Vessels) do
+	UseBinary(vv)	:=
+				VesselBinary(vv) is_binary;
+end-do
+
+
+! -------------------------------------- END OF CONSTRAINTS ------------------------------------------------------
+
+writeln;
+writeln('---------------------------------------------------------------------------------------------------------'); 
+writeln('------------------------------OUTPUT FROM THE SOLUTION PROCESS-------------------------------------------');
+writeln('---------------------------------------------------------------------------------------------------------'); 
+writeln;
+writeln;
+
+
+
+!Recieving output on the solution process
+setparam("XPRS_VERBOSE", true);
+
+setparam("xprs_miprelstop", MipGap);
+!setparam("xprs_SOLTIMELIMIT", MaxTime);	
+!Maxtime = MaxTime;
+
+
+
+!MINIMIZING THE OBJECTIVE FUNCTION
+minimize(TotalEmissions); 
+
+ 
+writeln;
+writeln;
+writeln('---------------------------------------------------------------------------------------------------------'); 
+writeln('-------------------------------POSTPROCESSING OF DATA----------------------------------------------------');
+writeln('---------------------------------------------------------------------------------------------------------'); 
+writeln;
+writeln;
+ 
+
+writeln;
+writeln('The optimal solution based on the given input data, as well as detailed');
+writeln('information about the cargo flows, is presented below: ');
+
+
+writeln('--- (Total emissions with REDUCED WAITING are found to be: ', getobjval, ' tons of CO2.)---');
+ 
+writeln;
+
+
+writeln('---------------------------------------------------------------------------------------------------------'); 
+writeln('------------------------------ROUTE AND VESSEL INFORMATION -------------------------------------------');
+writeln('---------------------------------------------------------------------------------------------------------'); 
+
+writeln;writeln;
+
+
+
+forall (vv in Vessels) do
+
+writeln('------- THE USE OF VESSEL ', vv, ' ------- ');
+
+forall (tt in PlanningPeriod, rr in Voyages, bb in Bases) do
+
+		if rr = 1 and round(getsol(WaitVar(vv,bb,tt))) = 1 then
+		
+		writeln('On day ', tt, ', the vessel waits at base ', bb, '.');
+		writeln;
+		elif round(getsol(VoyageSailed(vv,rr))) = 1 and tt = RouteStartDays(rr) and bb = RouteBaseStart(rr) then
+		
+		writeln('On day ', tt, ', the vessel starts sailing route ', rr, ' from base ', bb, ' at 4pm.');
+				if sum(ii in Installations) DayAtPos(ii,rr) = 0 then
+				writeln('	The route is a transit route from base ', RouteBaseStart(rr), ' to base ', RouteBaseEnd(rr), ', that does not visit installations.');
+				
+				else
+					write('	The route visits installation(s) ');
+					
+					forall(ii in Installations) do
+						if  DayAtPos(ii,rr) > 0.01 then
+							write(InstTranslation(ii), ' at day ', tt, ', ');
+						
+						end-if
+							if ii = nInsts then
+							writeln;
+							writeln('	before returning to base ', RouteBaseEnd(rr), ' at the start of day ', RouteEndDays(rr), ' (before 8am).');
+							end-if
+							end-do
+				end-if
+			
+		end-if
+	
+end-do
+writeln;
+
+
+
+end-do
+
+writeln('------- THE USE OF SPOT VESSELS ------- ');
+
+
+forall (rr in Voyages, bb in Bases, tt in PlanningPeriod) do
+	if round(getsol(SpotSailings(rr))) = 1 and bb = RouteBaseStart(rr) and tt = RouteStartDays(rr) then
+		writeln('A spot vessel is used to perform route ', rr, ' starting from base ', bb, ' on day ', tt, ' (at 4pm).');
+	
+	if sum(ii in Installations) DayAtPos(ii,rr) = 0 then
+				writeln('	The route is a transit route from base ', RouteBaseStart(rr), ' to base ', RouteBaseEnd(rr), ', that does not visit installations.');
+				
+				else
+					
+					write('	The route visits installation(s) ');
+					forall(ii in Installations | round(getsol(SpotSailings(rr))) = 1) do
+						if DayAtPos(ii,rr) > 0.01 then
+							write(InstTranslation(ii), ' at day ', tt, ', ');
+							
+						end-if
+							if ii = nInsts then
+							writeln;
+							writeln('	before returning to base ', RouteBaseEnd(rr), ' at the start of day ', RouteEndDays(rr), ' (before 8am).');
+							end-if
+						end-do
+
+				end-if
+	end-if
+	
+end-do
+
+
+writeln;
+writeln;
+
+
+
+writeln;writeln;
+writeln('------- THE FLEET BALANCE BETWEEN BASES ------- ');
+
+forall(vv in Vessels) do
+	writeln('Vessel ', vv, ' gets available at day ', VesselStartDays(vv), ' at base ', VesselStartBases(vv), ',');
+	forall (rr in Voyages, bb in Bases, tt = VesselEndDays(vv)) do
+	if round(getsol(WaitVar(vv,bb,tt-1))) = 1 and rr = 1 then
+	writeln('and ends its (local) planning horizon at day ', tt, ' in base ', bb, ' after waiting since day ', tt-1, '.');
+	elif round(getsol(VoyageSailed(vv,rr))) = 1 and tt = RouteEndDays(rr) and bb = RouteBaseEnd(rr) then
+	writeln('and ends its (local) planning horizon at day ', tt, ' in base ', RouteBaseEnd(rr), ' after sailing route ', rr, '.');
+	end-if
+	end-do
+end-do
+
+writeln;
+
+writeln('Furthermore, there is a need for ', count(rr in Voyages | round(getsol(SpotSailings(rr))) = 1) - sum(rr in Voyages) minlist(count(rp in Voyages | rr <> rp and RouteStartDays(rp) >= RouteEndDays(rr) and RouteBaseStart(rp) = RouteBaseEnd(rr) and round(getsol(SpotSailings(rr))) = 1 and round(getsol(SpotSailings(rp))) = 1), 1), ' spot vessel(s) in total.');
+
+	
+writeln;
+
+writeln('From a fleet of ', nVessels, ' vessel(s), there are ', sum(vv in Vessels) getsol(VesselBinary(vv)), ' vessel(s) in use in the optimal solution');
+
+writeln('A total of ', count(vv in Vessels, rr in Voyages | round(getsol(VoyageSailed(vv,rr))) = 1) + count(rr in Voyages | round(getsol(SpotSailings(rr))) = 1), ' voyages are sailed.');
+
+
+writeln('Waiting in port (20% of idling emissions) yields in total ', sum(vv in Vessels, bb in Bases, tt in PlanningPeriod | tt <= VesselEndDays(vv) - 1) getsol(WaitVar(vv,bb,tt))*WaitingEmissions, ' tons of CO2.');
+
+
+writeln;
+
+writeln;
+
+writeln('The ', count(vv in Vessels, rr in Voyages | round(getsol(VoyageSailed(vv,rr))) = 1), ' FLEET vessel voyages contribute with ', sum(vv in Vessels, rr in Voyages) RouteEmissions(rr)*getsol(VoyageSailed(vv,rr)),' tons of CO2.');
+
+if sum(rr in Voyages) round(getsol(SpotSailings(rr))) > 0 then
+
+writeln('The ', count(rr in Voyages | round(getsol(SpotSailings(rr))) = 1), ' SPOT vessel voyages contribute with ', sum(rr in Voyages) (RouteEmissions(rr)+SpotAddedEmissions)*getsol(SpotSailings(rr)),' tons of CO2.');
+end-if
+
+
+ 
+writeln;	
+
+if sum(vv in Vessels, rr in Voyages | SpotAllowed(rr) = 0) getsol(VoyageSailed(vv,rr)) > 0 then
+writeln('A total of ', sum(vv in Vessels, rr in Voyages | SpotAllowed(rr) = 0) getsol(VoyageSailed(vv,rr)), ' voyages are sailed starting and ending in different bases,');
+writeln('where ', sum(vv in Vessels, rr in Voyages | SpotAllowed(rr) = 0 and CargoOnRoute(rr) >= 1) getsol(VoyageSailed(vv,rr)), ' of these are carrying cargo.');
+writeln('These routes contributes to a total of ', sum(vv in Vessels, rr in Voyages | SpotAllowed(rr) = 0 and CargoOnRoute(rr) >= 1) (1-SpotAllowed(rr))*TruckFactorInterBase*TruckUnitEmissions*CargoOnRoute(rr)*getsol(VoyageSailed(vv,rr)), ' tons of CO2 from inter-base truck transportation.');
+end-if
+
+
+! The final output is tailor-made for the computational study where only two supply bases are present, and Mongstad is the one requiring additional truck transportation.
+if TruckDistCalc = 1 then
+	writeln;
+	writeln;
+	writeln('Mongstad is defined as base number 1. A total of ', sum(vv in Vessels, rr in Voyages | RouteBaseStart(rr) = 1) getsol(VoyageSailed(vv,rr)), ' routes sailed by FLEET vessels and ', sum(rr in Voyages | RouteBaseStart(rr) = 1) getsol(SpotSailings(rr)), ' SPOT sailings starts at Mongstad.');
+	writeln('It is assumed that a share of ', 100*TruckFactorIntraMong, '% of the cargo needs to be transported with truck from Stavanger.');
+	writeln('This results in extra CO2 emissions from truck transportation equal to ', sum(vv in Vessels, rr in Voyages | RouteBaseStart(rr) = 1)  TruckDistCalc*TruckFactorIntraMong*TruckUnitEmissions*CargoOnRoute(rr)*getsol(VoyageSailed(vv,rr)) + sum(rr in Voyages | RouteBaseStart(rr) = 1)  TruckDistCalc*TruckFactorIntraMong*TruckUnitEmissions*CargoOnRoute(rr)*getsol(SpotSailings(rr)), ' tons.');
+end-if	
+
+writeln;
+writeln('Hence, the TOTAL EMISSIONS ARE: ', getobjval ,' tons of CO2.');
+
+
+	
+end-model
