@@ -1,0 +1,145 @@
+nRoutes 	 : 	 3
+
+RouteMaxDur 	 : 	 2
+
+nBases 	 : 	 1
+
+nInsts 	 : 	 2
+
+nDays 	 : 	 8
+
+nNodes 	 : 	 24
+
+BinaryMong 	 : 	 0
+InstTranslation	  :   	  [ 
+33	 34	 
+]
+
+DemandReq	 : 	 [ 
+0	 0	 0	 1	 0	 0	 0	 1	 0	 
+0	 0	 0	 0	 0	 0	 0	 0	 0	 
+]
+
+WaitingEmissions 	 : 	 2.2
+
+BaseMaxCap 	 : 	 [ 
+5	 5	 5	 5	 5	 5	 5	 5	 5	 
+]
+
+BaseTransits 	 : 	 [
+0	 
+]
+
+
+CargoOnRoute   	  :   	 [
+24	 24	 24	 
+]
+
+SpotAllowed 	 : 	 [
+1	 1	 1	 
+]
+
+DayAtPos 	 : 	 [
+4	 4	 8	 
+0	 0	 0	 
+]
+
+RouteBaseStart 	 : 	 [
+1	 1	 1	 
+]
+
+RouteBaseEnd	 : 	 [
+1	 1	 1	 
+]
+
+RouteStartDays 	 : 	 [
+3	 4	 7	 
+]
+
+RouteEndDays 	 : 	 [
+5	 6	 9	 
+]
+
+RouteDurations 	 : 	 [
+2	 2	 2	 
+]
+
+RouteEmissions 	 : 	 [
+25.4	 25.2	 25.4	 
+]
+
+Node_InstMat 	 : 	 [
+0	 1	 2	 0	 1	 2	 0	 1	 2	 0	 1	 2	 0	 1	 2	 0	 1	 2	 0	 1	 2	 0	 1	 2	 
+]
+
+Node_DayMat 	 : 	 [
+1	 1	 1	 2	 2	 2	 3	 3	 3	 4	 4	 4	 5	 5	 5	 6	 6	 6	 7	 7	 7	 8	 8	 8	 
+]
+
+Node_DemandBinary 	 : 	 [
+0	 0	 0	 0	 0	 0	 0	 0	 0	 0	 1	 0	 0	 0	 0	 0	 0	 0	 0	 0	 0	 0	 1	 0	 
+]
+
+Node_RouteBinary 	 : 	 [
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+1	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 1	 0	 
+1	 1	 0	 
+0	 0	 0	 
+1	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 1	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 1	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 1	 
+0	 0	 0	 
+
+]
+
+Node_TrueDayMat 	 : 	 [
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+3	 4	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 7	 
+0	 0	 0	 
+
+]
+
+ShiftsPerRoute 	 : 	 [
+0	 0	 0	 
+0	 0	 0	 
+0	 0	 0	 
+
+]
+
