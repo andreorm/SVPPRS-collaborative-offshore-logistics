@@ -1,0 +1,15 @@
+nVessels 	 : 	11								
+											
+VesselStartBases 	 : 	 [									
+1	1	1	1	1	1	1	1	1	1	1	
+]											
+											
+											
+VesselStartDays 	 : 	 [									
+1	1	1	1	1	1	1	1	1	1	1	
+]											
+											
+											
+VesselEndDays 	 : 	 [									
+10	10	10	10	10	10	10	10	10	10	10	
+]											
