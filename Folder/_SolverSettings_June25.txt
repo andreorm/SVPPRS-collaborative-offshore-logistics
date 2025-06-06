@@ -1,0 +1,15 @@
+MipGap	:	[
+0.001
+]
+
+MaxTime	:	[
+900
+]
+
+
+WaitingEmissions 	 : 	 5.4	! Tons of CO2 per day
+SpotAddedEmissions	:	20	! Tons of CO2 per spot vessel route	
+
+TruckFactorInterBase	:	0.0
+TruckFactorIntraMong	:	0.25
+TruckUnitEmissions	:	0.0883
